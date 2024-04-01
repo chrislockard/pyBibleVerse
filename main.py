@@ -4,9 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 import sys
 
-def fetch_verse(reference):
-    """Fetches a Bible verse from BibleGateway.com given a reference."""
-    url = f"https://www.biblegateway.com/passage/?search={reference}&version=NRSVCE"
+def fetch_verse(reference, version):
+    """Fetches a Bible verse from BibleGateway.com given a reference and version."""
+    url = f"https://www.biblegateway.com/passage/?search={reference}&version={version}"
     response = requests.get(url)
     if response.status_code != 200:
         print("Error fetching the verse.")
@@ -21,14 +21,18 @@ def fetch_verse(reference):
         return None
 
 def main():
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         # Command-line mode
         reference = ' '.join(sys.argv[1:])
+        version = ' '.join(sys.argv[2:])
     else:
         # Interactive mode
-        reference = input("Enter the Bible verse reference (e.g., John 3:16): ")
+        reference = input("Enter the Bible verse reference (e.g., John 3:16)")
+        version = input("Enter the version (default: NRSVCE)")
+        if not version:
+            version = "NRSVCE"
 
-    verse = fetch_verse(reference)
+    verse = fetch_verse(reference, version)
     if verse:
         print(f"Verse: {verse}")
 
